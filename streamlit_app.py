@@ -10,6 +10,7 @@ st.set_page_config(
 # App Titles using standard markdown
 st.title("⚡ HypeFit")
 st.subheader("Goal: Lose 10-12 kg • 5-Day Dynamic Split")
+st.caption("Track your weights. Tap 'Too Easy' or 'Too Hard' to auto-adjust.")
 
 # Initialize session state to remember weights across weeks
 if 'weights' not in st.session_state:
@@ -28,21 +29,31 @@ if 'weights' not in st.session_state:
 instructions = {
     "Bench Press": "Lie flat on a bench. Lower the bar smoothly to your mid-chest, then drive it straight up while keeping your feet planted.",
     "Incline Dumbbell Fly": "Set bench to 30°. Keep a slight bend in your elbows, open your arms wide like a hug, and squeeze your chest at the top.",
+    "Incline Dumbbell Press": "Set bench to 30°. Press dumbbells straight up over your chest. Lower down until elbows pass your torso.",
     "Tricep Pushdown": "Keep elbows pinned to your ribs. Push the cable bar/rope down smoothly, squeezing your triceps at the bottom.",
+    "Overhead Tricep Extension": "Hold a dumbbell or cable behind your head. Keep your elbows facing forward and extend your hands up toward the ceiling.",
     "Lat Pulldown": "Sit tall, lean back slightly. Pull the bar down to your upper chest by driving your elbows down toward your back pockets.",
     "Seated Cable Row": "Keep your spine tall. Pull the handle toward your lower stomach, pulling your shoulder blades tightly together.",
     "Bicep Curl": "Keep elbows locked at your sides. Curl the weight up smoothly without swinging your upper body.",
+    "Bent Over Row": "Hinge at your hips, keeping your back completely flat. Pull the barbell up toward your belly button.",
+    "Hammer Curl": "Hold dumbbells with palms facing each other (like a hammer). Curl upward to target your forearms and biceps.",
     "Squat": "Keep your chest up and feet shoulder-width apart. Sit back into your hips like sitting in a chair, pushing knees outward.",
     "Leg Press": "Place feet hip-width on the platform. Lower it slowly until your knees are at 90°, then press up (do not lock your knees).",
-    "Calf Raise": "Stand on an edge. Drop your heels low for a deep stretch, then explode up onto your tiptoes and hold for 1 second."
+    "Calf Raise": "Stand on an edge. Drop your heels low for a deep stretch, then explode up onto your tiptoes and hold for 1 second.",
+    "Bulgarian Split Squat": "Place one foot behind you on a bench. Drop your back knee toward the floor while keeping your front knee stable.",
+    "Leg Curl": "Lie or sit in the machine. Drive your heels down toward your glutes, squeezing your hamstrings hard at the peak.",
+    "Overhead Press": "Stand tight, core engaged. Press the barbell from your collarbone straight up over your head until arms lock.",
+    "Dumbbell Shoulder Press": "Sit or stand with weights at ear level. Press straight up overhead without letting your lower back arch.",
+    "Lateral Raise": "Stand tall, lead with your elbows out to the sides. Bring hands up to shoulder height to build wide, capped shoulders.",
+    "Front Raise": "Raise dumbbells directly out in front of you to eye level, controlling the weight smoothly on the way back down.",
+    "Face Pull": "Pull the cable rope toward your nose, flaring your elbows high and wide to hit your upper back and rear shoulders."
 }
 
 # --- VISUAL IMAGES / GIFS DICTIONARY ---
-# You can replace these URLs with any open-source exercise GIFs or images you find online!
 visuals = {
-    "Bench Press": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzEwYTM4Y2Y4bW90Y2N4N3R5M2M0bW90Y2N4N3R5M2M0bW90Y2N4/3o7qE0gYsgDCI0SLR6/giphy.gif",
-    "Incline Dumbbell Fly": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWRhM2I0M2U0bW90Y2N4N3R5M2M0bW90Y2N4N3R5M2M0bW90Y2N4/l0HlU7e8I5fW6pZ0A/giphy.gif",
-    "Squat": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2g0bW90Y2N4N3R5M2M0bW90Y2N4N3R5M2M0bW90Y2N4N3R5M2M0bW90Y2N4/3o7qE4uMcuM9OJT0A0/giphy.gif"
+    "Bench Press": "https://raw.githubusercontent.com/Seunghoon-Ko/Fitness-App/main/assets/gifs/00251301.gif",
+    "Incline Dumbbell Fly": "https://raw.githubusercontent.com/Seunghoon-Ko/Fitness-App/main/assets/gifs/03081301.gif",
+    "Squat": "https://raw.githubusercontent.com/Seunghoon-Ko/Fitness-App/main/assets/gifs/00431301.gif"
 }
 
 # --- THE 5-DAY ROTATING SPLIT ---
@@ -83,6 +94,7 @@ st.divider()
 
 # --- WEIGHT TRAINING SECTION ---
 st.markdown("### 🏋️‍♀️ Step 2: Main Lifting Session")
+st.caption("Perform 3 Sets of 10-12 Repetitions per exercise.")
 
 exercises = current_routine[day]
 
@@ -92,9 +104,9 @@ for exercise in exercises:
     st.markdown(f"#### {exercise}")
     st.caption(f"💡 {instructions.get(exercise, '')}")
     
-    # NEW: Displays visual media if a URL exists in our dictionary
+    # Render GIF if available
     if exercise in visuals:
-        st.image(visuals[exercise], width=350)
+        st.image(visuals[exercise], width=300)
         
     st.write(f"**Target:** 3 Sets × 10-12 reps @ **{current_weight} kg**")
     
@@ -114,10 +126,11 @@ for exercise in exercises:
             st.session_state.weights[exercise] = max(0.0, st.session_state.weights[exercise] - 2.5)
             st.rerun()
     
-    st.divider()
+    st.write("")
 
 # --- SIDEBAR TRACKER ---
 st.sidebar.header("📋 Weight Tracker Matrix")
+st.sidebar.caption("Updates instantly based on your adjustments.")
 for ex, wt in st.session_state.weights.items():
     if ex in exercises:
         st.sidebar.markdown(f"**{ex}:** `{wt} kg` 🔥")
