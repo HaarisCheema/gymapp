@@ -1,7 +1,8 @@
 import streamlit as st
 
-# Set up page title
-st.set_page_title("Gym Progress & Weight Adjuster", page_icon="💪")
+# Universal configuration command (Fixes line 4 error)
+st.set_page_config(page_title="Gym Progress & Weight Adjuster", page_icon="💪")
+
 st.title("🏋️‍♂️ Your 5-Day Gym Companion")
 st.subheader("Lose 10-12 kg Goal • 20 Min Cardio + Weight Training")
 
@@ -52,7 +53,7 @@ else:
         with col1:
             if st.button(f"Too Easy 🟢", key=f"easy_{exercise}"):
                 st.session_state.weights[exercise] += 2.5
-                st.experimental_rerun()
+                st.rerun()
                 
         with col2:
             st.button("Just Right 🔵", key=f"right_{exercise}")
@@ -60,7 +61,7 @@ else:
         with col3:
             if st.button(f"Too Difficult 🔴", key=f"hard_{exercise}"):
                 st.session_state.weights[exercise] = max(0, st.session_state.weights[exercise] - 2.5)
-                st.experimental_rerun()
+                st.rerun()
         
         st.markdown("---")
 
