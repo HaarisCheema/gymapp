@@ -1,25 +1,16 @@
 import streamlit as st
 
-# Custom page config with a dark/modern vibe layout
+# Setup page layout natively
 st.set_page_config(
     page_title="HypeFit • Your 5-Day Gym Companion", 
     page_icon="⚡", 
     layout="centered"
 )
 
-# Custom CSS for modern styling and clean typography
-st.markdown("""
-<style>
-    .main { background-color: #0e1117; }
-    h1 { color: #FF4B4B; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 800; }
-    h3 { color: #FAFAFA; font-weight: 600; margin-top: 20px; }
-    .stButton>button { width: 100%; border-radius: 8px; font-weight: bold; }
-    .instruction-text { color: #A3A8B4; font-size: 14px; font-style: italic; margin-bottom: 15px; }
-</style>
-""", unsafe_allowed_html=True)
-
+# App Titles using standard markdown
 st.title("⚡ HypeFit")
 st.subheader("Goal: Lose 10-12 kg • 5-Day Dynamic Split")
+st.caption("Track your weights. Tap 'Too Easy' or 'Too Hard' to auto-adjust.")
 
 # Initialize session state to remember weights across weeks
 if 'weights' not in st.session_state:
@@ -59,7 +50,6 @@ instructions = {
 }
 
 # --- THE 5-DAY ROTATING SPLIT ---
-# Week A Setup
 week_a = {
     "Day 1: Chest & Triceps (Push A)": ["Bench Press", "Incline Dumbbell Fly", "Tricep Pushdown"],
     "Day 2: Back & Biceps (Pull A)": ["Lat Pulldown", "Seated Cable Row", "Bicep Curl"],
@@ -68,7 +58,6 @@ week_a = {
     "Day 5: Full Body Flush": ["Bench Press", "Lat Pulldown", "Squat"]
 }
 
-# Week B Setup (Variation week for muscle confusion)
 week_b = {
     "Day 1: Chest & Triceps (Push B)": ["Incline Dumbbell Press", "Bench Press", "Overhead Tricep Extension"],
     "Day 2: Back & Biceps (Pull B)": ["Bent Over Row", "Lat Pulldown", "Hammer Curl"],
@@ -77,7 +66,7 @@ week_b = {
     "Day 5: Full Body Challenge": ["Incline Dumbbell Press", "Seated Cable Row", "Leg Press"]
 }
 
-# Week & Day Selectors (Clean layout columns)
+# Week & Day Selectors
 col_wk, col_day = st.columns(2)
 with col_wk:
     current_week = st.radio("🗓️ Select Current Week:", ["Week A", "Week B"])
@@ -87,14 +76,14 @@ current_routine = week_a if current_week == "Week A" else week_b
 with col_day:
     day = st.selectbox("📆 Select Gym Day:", list(current_routine.keys()))
 
-st.markdown("---")
+st.divider()
 
 # --- CARDIO SECTION ---
 st.markdown("### 🏃‍♂️ Step 1: Metabolic Warm-up & Cardio")
 st.info("**Target:** 15–20 minutes on the Treadmill, Stairmaster, or Bike. Keep a brisk pace!")
 cardio_done = st.checkbox("Cardio Completed", key="cardio_chk")
 
-st.markdown("---")
+st.divider()
 
 # --- WEIGHT TRAINING SECTION ---
 st.markdown("### 🏋️‍♀️ Step 2: Main Lifting Session")
@@ -105,10 +94,9 @@ exercises = current_routine[day]
 for exercise in exercises:
     current_weight = st.session_state.weights[exercise]
     
-    st.markdown(f"#### **{exercise}**")
-    # Display the written text instructions dynamically
-    st.markdown(f"<div class='instruction-text'>💡 {instructions.get(exercise, '')}</div>", unsafe_allowed_html=True)
-    st.write(f"**Target:** 3 Sets × 10-12 reps @ `{current_weight} kg`")
+    st.markdown(f"#### {exercise}")
+    st.caption(f"💡 {instructions.get(exercise, '')}")
+    st.write(f"**Target:** 3 Sets × 10-12 reps @ **{current_weight} kg**")
     
     # Custom feedback buttons
     col1, col2, col3 = st.columns(3)
@@ -126,11 +114,11 @@ for exercise in exercises:
             st.session_state.weights[exercise] = max(0.0, st.session_state.weights[exercise] - 2.5)
             st.rerun()
     
-    st.markdown("<br>", unsafe_allowed_html=True)
+    st.write("")
 
 # --- SIDEBAR TRACKER ---
 st.sidebar.header("📋 Weight Tracker Matrix")
-st.sidebar.caption("This updates instantly based on your inputs.")
+st.sidebar.caption("Updates instantly based on your adjustments.")
 for ex, wt in st.session_state.weights.items():
     if ex in exercises:
         st.sidebar.markdown(f"**{ex}:** `{wt} kg` 🔥")
